@@ -1,7 +1,13 @@
 # Media Task Backend API Documentation
 
 ## Overview
-This backend service manages user media submissions and provides admin functionality for managing submissions. Built with Node.js, Express, and MongoDB, it features secure file uploads to Supabase storage and JWT-based admin authentication.
+This backend service manages user media submissions and provides admin functionality for managing submissions. Built with Node.js, Express, MongoDB, and Supabase for file storage.
+
+## Requirements
+- Node.js 14+
+- MongoDB
+- Supabase account
+- NPM or Yarn
 
 ## Table of Contents
 - [Setup](#setup)
@@ -37,9 +43,22 @@ JWT_SECRET=your_jwt_secret_key
 JWT_EXPIRE=24h
 ADMIN_USERNAME=your_admin_username
 ADMIN_PASSWORD=your_admin_password
-SUPABASE_URL=your_supabase_url
-SUPABASE_KEY=your_supabase_key
+SUPABASE_URL=your_supabase_project_url      # Required for file storage
+SUPABASE_KEY=your_supabase_anon_key         # Required for file storage
 ```
+
+### Supabase Setup
+1. Create a Supabase account at https://supabase.com
+2. Create a new project
+3. Create a storage bucket named 'Social Media Task'
+4. Get your project URL and anon key from Project Settings -> API
+5. Add them to your .env file
+
+## Supabase Storage Structure
+- Bucket: 'Social Media Task'
+- Files are stored in: 'submissions/' directory
+- File naming: `timestamp-sanitized-filename`
+- Public access enabled for uploaded files
 
 ## API Endpoints
 
@@ -166,6 +185,7 @@ The API returns appropriate HTTP status codes:
 This project uses:
 - Node.js & Express
 - MongoDB with Mongoose
+- Supabase for file storage
 - JWT for authentication
 - Multer for file handling
-- Supabase for file storage
+- CORS enabled

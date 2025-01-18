@@ -7,6 +7,7 @@ const AdminLogin = () => {
     username: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false); // Added loading state
 
   const navigate = useNavigate();
 
@@ -21,6 +22,8 @@ const AdminLogin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    setLoading(true); // Set loading to true when login starts
+
     try {
       const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/admin/login`, formData);
       const { token } = response.data;
@@ -33,6 +36,8 @@ const AdminLogin = () => {
     } catch (error) {
       console.error("Error during login:", error.response?.data || error.message);
       alert("Login failed: " + (error.response?.data?.message || error.message));
+    } finally {
+      setLoading(false); // Set loading to false after the request completes
     }
   };
 
@@ -73,8 +78,15 @@ const AdminLogin = () => {
         <button
           type="submit"
           className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors duration-200"
+          disabled={loading} // Disable button when loading
         >
-          Login
+          {loading ? (
+            <div className="flex justify-center items-center">
+              <div className="animate-spin rounded-full border-t-2 border-b-2 border-white w-6 h-6"></div>
+            </div>
+          ) : (
+            "Login"
+          )}
         </button>
       </form>
     </div>
