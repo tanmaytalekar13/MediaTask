@@ -22,7 +22,7 @@ const AdminLogin = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:3000/api/admin/login", formData);
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/admin/login`, formData);
       const { token } = response.data;
 
       // Save the token (if needed for authentication in future requests)

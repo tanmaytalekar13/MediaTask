@@ -25,44 +25,39 @@ const Home = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true); // Show loader
+    setIsLoading(true);
 
     const formDataToSend = new FormData();
     formDataToSend.append("name", formData.name);
     formDataToSend.append("socialMedia", formData.socialMedia);
 
-    // Append each file to the FormData
     formData.images.forEach((image) => {
       formDataToSend.append("images", image);
     });
 
     try {
-      const response = await fetch("http://localhost:3000/api/user/submit", {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/user/submit`, {
         method: "POST",
-        body: formDataToSend, // Content-Type is automatically set to multipart/form-data
+        body: formDataToSend,
       });
 
       if (response.ok) {
-        const data = await response.json();
-        console.log("Form submitted successfully:", data);
-
-        if (data.isAdmin) {
-          // Redirect to admin login if the user is an admin
-          window.location.href = "http://localhost:3000/api/admin/login";
-        } else {
-          alert("Form submitted successfully!");
-          console.log("Uploaded image URLs:", data.submission.images);
-        }
+        alert("Form submitted successfully!");
+        // Reset form
+        setFormData({
+          name: "",
+          socialMedia: "",
+          images: [],
+        });
       } else {
         const error = await response.json();
-        console.error("Error submitting form:", error);
-        alert("Error submitting form: " + error.error);
+        throw new Error(error.error || 'Submission failed');
       }
     } catch (error) {
-      console.error("Network error:", error);
-      alert("Network error: " + error.message);
+      console.error("Error:", error);
+      alert("Error: " + (error.message || "Something went wrong"));
     } finally {
-      setIsLoading(false); // Hide loader
+      setIsLoading(false);
     }
   };
 
